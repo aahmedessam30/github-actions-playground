@@ -6,8 +6,6 @@ on:
       - main
       - "release/**"
       - "feature/**"
-    paths:
-      - "src/**"
 
   pull_request:
     branches:
