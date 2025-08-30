@@ -6,8 +6,8 @@ on:
       - main
       - "release/**"
       - "feature/**"
-    paths:
-      - "src/**"
+    # paths:
+    #   - "src/**"
 
   pull_request:
     branches:
@@ -25,4 +25,3 @@ jobs:
 
       - name: Run Tests
         run: npm test
-        working-directory: ./src
