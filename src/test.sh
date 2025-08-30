@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # src/test.sh
-echo "Running tests..."
+echo "Running tests for src/app.js"
 
 EXPECTED="Hello, Test!"
 
