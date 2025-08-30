@@ -8,25 +8,65 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Print Job Name
-        run: "echo 'Running Job: ${{ github.job }}'"
+        run: |
+          echo "Running Job: ${{ github.job }}"
+          echo "${{ github.job }} completed"
+          echo "All jobs completed"
 
-  job_2:
+  action_job:
     runs-on: ubuntu-latest
-    needs: job_1
     steps:
-      - name: Print Job Name
-        run: "echo 'Running Job: ${{ github.job }}'"
+      - name: Say Hello
+        uses: ./github/actions/Greeting@c1
+        with:
+          who-to-greet: "Ahmed Essam"
+          greeting-message: "Hello"
+          additional-info: "Welcome to the GitHub Actions Playground!"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  job_3:
+  hybrid_job:
     runs-on: ubuntu-latest
-    needs: job_1
     steps:
-      - name: Print Job Name
-        run: "echo 'Running Job: ${{ github.job }}'"
+      - name: Run a command in ubuntu VM
+        run: echo "This runs on an ubuntu VM"
 
-  job_4:
+      - name: Run inside a container
+        uses: docker://alpine:latest # must be public container
+        with:
+          entrypoint: /bin/sh
+          args: -c "echo 'This runs inside an alpine container'"
+
+      - name: Run another command in ubuntu VM
+        run: echo "This runs again on the ubuntu VM"
+
+  dockerized_jobs:
     runs-on: ubuntu-latest
-    needs: [job_2, job_3]
+    container:
+      image: node:20
+    #   credentials:
+    #     username: ${{ secrets.DOCKER_USERNAME }}
+    #     password: ${{ secrets.DOCKER_PASSWORD }}
     steps:
-      - name: Print Job Name
-        run: "echo 'Running Job: ${{ github.job }}'"
+      - name: Run a command in Node.js container
+        run: node -e "console.log('Hello from Node.js container!')"
+
+  matrix_job:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node-version: [14, 16, 18]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3.6.0
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Run tests
+        run: npm test
