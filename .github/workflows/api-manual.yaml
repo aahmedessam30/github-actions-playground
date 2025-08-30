@@ -1,0 +1,16 @@
+name: API Manual Tests
+
+on:
+  repository_dispatch:
+    types: [incident_report]
+
+jobs:
+  handle-incident:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v5.0.0
+
+      - name: Run Tests
+        run: npm test
