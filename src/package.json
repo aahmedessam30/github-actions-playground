@@ -1,0 +1,10 @@
+{
+  "name": "github-actions-playground",
+  "description": "A simple project to demonstrate GitHub Actions",
+  "version": "1.0.0",
+  "main": "src/app.js",
+  "scripts": {
+    "test": "bash src/test.sh"
+  },
+  "dependencies": {}
+}
